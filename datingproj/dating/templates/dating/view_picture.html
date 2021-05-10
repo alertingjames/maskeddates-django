@@ -1,0 +1,146 @@
+{% extends 'dating/base_home.html' %}
+{% block title %}Member's picture{% endblock %}
+{% block body %}
+<br>
+<br>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta charset="utf-8">
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/q9.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+img {
+  border-radius: 5%;
+  height: 80px;
+  width: 80px;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+#edit {
+  max-width:550px;
+  width:auto;
+  margin:auto;
+  overflow: hidden;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 10px 10px;
+}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<img src="/static/dating/images/appicon.png" style="position:relative; width:60px; height:60px; border-radius:50%; border:2px solid yellow; z-index:100; left:3%; top:50px;">
+
+{% if image != '' %}
+<div  id="edit">
+    <center>
+        <img id="image" src="{{image}}" style="width:75%; height:auto; margin-top:30px;">
+    </center>
+</div>
+<input type="hidden" value="{{image}}" id="imageurl">
+<script>
+ if(!checkimage(document.getElementById("imageurl").value)){
+    document.getElementById("image").src = "/static/dating/images/img_not_available.png";
+ }
+ function checkimage(imageurl) {
+   try {
+    var img = document.createElement("img");
+    img.src = imageurl;
+
+   } catch(err)
+   {
+        //
+   }
+
+    if(img.height > 0) {
+       return true;
+    } else {
+       return false;
+    }
+}
+</script>
+{% else %}
+<script>
+    document.getElementById("image").src = "/static/dating/images/img_not_available.png";
+</script>
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

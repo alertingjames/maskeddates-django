@@ -1,0 +1,196 @@
+{% extends 'dating/base_file.html' %}
+{% block title %}User Signup{% endblock %}
+{% block body %}
+
+<br>
+
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.5),rgba(0,100,250,0.5)), url("/static/dating/images/pattern0.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-top: 2% auto;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#fff;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+  text-align:left;
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.icon-case {
+  width: 8%;
+  float: left;
+  border-radius: 50px 0px 0px 50px;
+  background:green;
+  height:42px;
+  position: relative;
+  text-align: center;
+  line-height:40px;
+  padding-top:11px;
+}
+
+i {
+  color:yellow;
+}
+
+.contentform {
+  padding: 30px;
+  float:middle;
+  margin:auto;
+}
+
+.bouton-update{
+  background-color: #006600;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+
+  margin-bottom:10%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px 50px 50px 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  <!--border-right: 1px dotted #CCC;-->
+  box-sizing: border-box;
+  padding: 0px 0px 0px 0px;
+}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% if note %}
+<h4><script>alert("You have already been registered. Please log in...")</script></h4>
+    {% endif %}
+
+{% if error %}
+<h4><script>alert("No provided photo. Try again ...")</script></h4>
+    {% endif %}
+
+<img src="/static/dating/images/shareicon.png" style="position:relative; width:60px; height:60px; border-radius:3%; z-index:100; left:3%;">
+
+<a href="{% url 'loginpage' %}" style="position:relative; left:40%; float:middle; transform:translate(-50%, -50%); width:auto; z-index:100; ">
+	<span class="glyphicon glyphicon-log-in" aria-hidden="true" style="text-decoration: underline; font-size:22px; padding-right:20px; color:yellow; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"> LOGIN</span>
+    </a>
+
+<img src="/static/dating/images/processing.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle; border-radius: 1px;
+	transform:translate(-50%, -50%); width:80px; z-index:100; top:120px; display: none;" id="gif">
+
+  <form id="edit" action="{% url 'usersignup' %}" method="post" enctype="multipart/form-data">
+	  {% csrf_token %}
+    <div class="contentform">
+		<div class="formcontent">
+			<div class="form-group">
+				<p>E-mail <span>*</span></p>
+				<span class="icon-case"><i class="fa fa-envelope-o"></i></span>
+                	<input type="email" name="email" data-rule="required" data-msg="" required id="email" value=""/>
+			</div>
+			<div class="form-group">
+				<p>Password <span>*</span></p>
+				<span class="icon-case"><i class="fa fa-lock"></i></span>
+				<input type="password" name="password" data-rule="required" data-msg="" required id="password" value=""/>
+			</div>
+			<div class="form-group" style="margin-top:10%;">
+				<button type="submit" class="bouton-update">REGISTER</button>
+            </div>
+        </div>
+	</div>
+</form>
+
+<script>
+    function progressBar(){
+        var photo = document.getElementById("b64").value;
+        var name = document.getElementById("name").value;
+        var email = document.getElementById("email").value;
+        var phone = document.getElementById("phone").value;
+        var password = document.getElementById("password").value;
+
+        if (email.length > 0 && password.length > 0){
+            document.getElementById("gif").style.display = "block";
+        }else {
+            alert("Please complete your info ...");
+        }
+    }
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,462 @@
+{% extends 'dating/base_users.html' %}
+{% block title %}Photo approval{% endblock %}
+{% block body %}
+<br>
+<br>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta charset="utf-8">
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/pattern0.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+img {
+  border-radius: 5%;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:550px;
+  width:auto;
+  margin:auto;
+  background:linear-gradient(0deg,rgba(100,50,250,0.0),rgba(100,50,250,0.3),rgba(100,50,250,0.3),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(50,100,250,0.2));
+  background-size:cover;
+  overflow: hidden;
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.2);
+}
+#edit:hover {
+  background:linear-gradient(0deg,rgba(100,50,250,0.0),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(50,100,250,0.3));
+  background-size:cover;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 200;
+  line-height: 2;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 5px;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 42px;
+  float: left;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:blue;
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 10px 10px;
+}
+
+.show {
+    z-index:1000;
+    position: absolute;
+    background-color:#ffffff;
+    border: 2px solid orange;
+    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.25);
+    padding: 10px;
+    display: block;
+    font-size:20px;
+    border-radius:20px;
+    margin: 0;
+    list-style-type: none;
+    list-style: none;
+}
+
+.hide {
+    display: none;
+}
+
+.show li{ list-style: none; }
+.show a { border: 0 !important; text-decoration: none; }
+.show a:hover { text-decoration: underline !important; }
+
+label input {
+  display: none;/* <-- hide the default checkbox */
+}
+label span {/* <-- style the artificial checkbox */
+  height: 15px;
+  width: 15px;
+  border: 1px solid black;
+  border-radius:50%;
+  background-color:transparent;
+  margin-right:3px;
+  display: inline-block;
+  position: relative;
+}
+[type=checkbox]:checked + span:before {/* <-- style its checked state..with a ticked icon */
+  content: '\2714';
+  color:white;
+  position: absolute;
+  top: -5px;
+  left: 0;
+}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<form id="filterBox" action="/filter" method="post" style="font-size:16px; font-weight:300; color: black; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:10px; padding: 8px 15px 15px 15px;
+	transform:translate(-50%, -50%); width:350px; z-index:200; top:350px; display:none;">
+    {% csrf_token %}
+    <img src="/static/dating/images/filtericon.png" style="border-radius:0px; width:30px; height:30px; float:left; margin-top:5px;">
+    <img src="/static/dating/images/cancel.png" style="width:25px; height:25px; float:right; margin-top:5px;" onclick="javascript:document.getElementById('filterBox').style.display='none';">
+    <link rel="stylesheet" href="/static/dating/jquery.datetimepicker.min.css">
+    <script src="/static/dating/jquery.datetimepicker.full.js"></script>
+	<div style="width:100%; text-align:center;">
+        <p style="margin-top:15px;">From-date</p>
+        <div id="datetimebox" style="width:auto;" onchange="updatedatetime();">
+            <input type="text" placeholder="Input from-date" required id="fromdate" autocomplete="off">
+        </div>
+        <input type="hidden" name="fromdate" id="fromdate2">
+        <br>
+        <script>
+             jQuery('#datetimebox').datetimepicker();
+             function updatedatetime(){
+                  var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                  var mths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                  var datetime = document.getElementById("datetimebox").value;
+                  var year = datetime.substring(0, 4);
+                  var month = datetime.substring(5, 7);
+                  var day = datetime.substring(8, 10);
+                  var hour = datetime.substring(11, 13);
+                  var minute = datetime.substring(14, 16);
+                  var ap = '';
+                  if (parseInt(hour) > 12) {
+                       hour = String(parseInt(hour) - 12);
+                       ap = 'PM';
+                  }else ap = 'AM';
+                  var monthindex = parseInt(month);
+                  month = months[monthindex - 1];
+                  document.getElementById("fromdate").value = month + ' ' + day + ', ' + year + ' - ' + hour + ':' + minute + ' ' + ap;
+                  document.getElementById("fromdate2").value = new Date(datetime).getTime();
+             }
+        </script>
+        <p style="margin-top:15px;">To-date</p>
+        <div id="datetimebox2" style="width:auto;" onchange="updatedatetime2();">
+            <input type="text" placeholder="Input to-date" required id="todate" autocomplete="off">
+        </div>
+        <input type="hidden" name="todate" id="todate2">
+        <script>
+             jQuery('#datetimebox2').datetimepicker();
+             function updatedatetime2(){
+                  var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                  var mths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                  var datetime = document.getElementById("datetimebox2").value;
+                  var year = datetime.substring(0, 4);
+                  var month = datetime.substring(5, 7);
+                  var day = datetime.substring(8, 10);
+                  var hour = datetime.substring(11, 13);
+                  var minute = datetime.substring(14, 16);
+                  var ap = '';
+                  if (parseInt(hour) > 12) {
+                       hour = String(parseInt(hour) - 12);
+                       ap = 'PM';
+                  }else ap = 'AM';
+                  var monthindex = parseInt(month);
+                  month = months[monthindex - 1];
+                  document.getElementById("todate").value = month + ' ' + day + ', ' + year + ' - ' + hour + ':' + minute + ' ' + ap;
+                  document.getElementById("todate2").value = new Date(datetime).getTime();
+             }
+        </script>
+    </div><br>
+    <button style="margin-top:15px; width:100%; text-align:center; padding:8px; border:0px;
+        border-radius:5px; background:#0066cc; color:white; font-size:14px;">Search</button>
+</form>
+
+<div id="title" style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;
+	position:fixed; left:50%; float:middle; transform:translate(-50%, -50%); width:350px; z-index:100; top:92px; display:none;">Registered users</div>
+
+<img src="/static/dating/images/appicon.png" style="position:relative; width:60px; height:60px; border-radius:50%; border:2px solid yellow; z-index:100; left:3%; top:50px;">
+
+{% if result == 'success' %}
+<script>alert("Successfully logged in")</script>
+{% endif %}
+
+{% if users %}
+<div style="width:100%; height:auto;">
+    <div style="font-size:25px; font-weight:800; margin-bottom:30px;
+        color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">Registered users</div>
+    <div class="container-fluid" style="margin-top:3%;">
+        <div class="row">
+            {% for user in users %}
+            <div class="col-sm-4" style="padding-bottom:15px;" id="{{user.id}}">
+                <div id="edit">
+                    <!--<input type="hidden" id="user_id" value="{{user_id}}">-->
+                    <div class="contentform">
+                        <div style="width:100%;">
+                            <div style="width:100%; height:135px;">
+                                <div style="padding:10px; width:45%; float:left;">
+                                    <center>
+                                        <div style="color:white; font-size:16px;">Selfie photo</div><br>
+                                        <a href="/view_image?photo_url={{user.photo_url}}">
+                                            <img src="{{user.photo_url}}" style="max-width:110px; width:auto; height:auto; max-height:130px;">
+                                        </a>
+                                    </center>
+                                </div>
+                                <div style="padding:10px; width:45%; float:left; margin-left:10px;">
+                                    <center>
+                                        <div id="fb_caption" style="color:white; font-size:16px;">Facebook photo</div><br>
+                                        <a href="{{user.fb_photo}}" target="_blank">
+                                            <img src="{{user.fb_photo}}" id="fb_photo" style="max-width:110px; width:auto; height:auto; max-height:130px;">
+                                        </a>
+                                    </center>
+                                </div>
+                            </div>
+                            <div style="padding-left:30px; color: white; float:left; font-weight:600; font-size:18px; width:100%; text-align:left;">
+                                {{user.name}}
+                            </div>
+                            <div style="float:right; width:auto; text-align:left;">
+                                {% if user.password == 'deactivated' %}
+                                    <label style="color: white; font-weight:600; font-size:16px; font-family:cursive; background:gray; padding:1px 16px 3px 16px; margin-right:10px; border-radius:50px 3px 50px 3px;">
+                                        Deactivated
+                                    </label>
+                                {% elif user.password == 'canceled' %}
+                                    <label style="color: white; font-weight:600; font-size:16px; font-family:cursive; background:gray; padding:1px 16px 3px 16px; margin-right:10px; border-radius:50px 3px 50px 3px;">
+                                        Canceled
+                                    </label>
+                                {% elif user.selfie_approved == 'yes' %}
+                                    <label style="color: red; font-weight:600; font-size:16px; font-family:cursive; padding:1px 16px 3px 16px; margin-right:10px; border-radius:50px 3px 50px 3px; border:1.5px solid red;">Approved</label>
+                                {% elif user.selfie_approved == 'no' %}
+                                    <label style="color: black; font-weight:600; font-size:16px; font-family:cursive; padding:1px 16px 3px 16px; margin-right:10px; border-radius:3px 50px 3px 50px; border:1.5px solid black;">Rejected</label>
+                                {% else %}
+                                    <label style="color: gray; font-weight:600; font-size:16px; font-family:cursive; padding:1px 16px 3px 16px; margin-right:10px;">Pending</label>
+                                {% endif %}
+                            </div>
+                            <div style="padding-left:30px; padding-right:8px; color: white; float:left; font-weight:500; font-size:14px; width:auto; text-align:left; white-space: pre-line; word-break: break-all; word-wrap: break-word;">
+                                {{user.email}}<br>{{user.age}}, {{user.gender}}, <img src="/static/dating/images/marker.png" style="width:18px; height:20px; margin-right:5px;">{{user.address}}
+                                {{user.premium}}
+                            </div>
+                            <div style="width:100%; text-align:right; float:left; margin-bottom:8px;">
+                                {% if user.password == 'canceled' %}
+                                    <a href="javascript:void(0)" class="btn btn-info btn-lg"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:gray; border:1px solid #eee;">
+                                        <span class="glyphicon glyphicon-remove" style="padding-right:10px;"></span>Reject
+                                    </a>
+                                    <a href="javascript:void(0)" class="btn btn-info btn-lg"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:gray; border:1px solid #eee;">
+                                        <span class="glyphicon glyphicon-ok" style="padding-right:10px;"></span>Approve
+                                    </a>
+                                {% elif user.selfie_approved == 'yes' %}
+                                    <a href="/photorejected/{{user.id}}/" class="btn btn-info btn-lg" onclick="return confirm('Are you sure reject this photo?');"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:green; border:1px solid #eee;">
+                                        <span class="glyphicon glyphicon-remove" style="padding-right:10px;"></span>Reject
+                                    </a>
+                                    <a href="#" class="btn btn-info btn-lg"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:gray; border:1px solid #eee;">
+                                        <span class="glyphicon glyphicon-ok" style="padding-right:10px;"></span>Approve
+                                    </a>
+                                {% elif user.selfie_approved == 'no' %}
+                                    <a href="#" class="btn btn-info btn-lg"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:gray; border:1px solid #eee;">
+                                        <span class="glyphicon glyphicon-remove" style="padding-right:10px;"></span>Reject
+                                    </a>
+                                    <a href="/photo_approved/{{user.id}}/" class="btn btn-info btn-lg" onclick="return confirm('Are you sure approve this photo?');"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:green; border:1px solid #eee;">
+                                        <span class="glyphicon glyphicon-ok" style="padding-right:10px;"></span>Approve
+                                    </a>
+                                {% else %}
+                                    <a href="/photorejected/{{user.id}}/" class="btn btn-info btn-lg" onclick="return confirm('Are you sure reject this photo?');"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:green; border:1px solid #eee;">
+                                        <span class="glyphicon glyphicon-remove" style="padding-right:10px;"></span>Reject
+                                    </a>
+                                    <a href="/photo_approved/{{user.id}}/" class="btn btn-info btn-lg"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:green; border:1px solid #eee;">
+                                        <span class="glyphicon glyphicon-ok" style="padding-right:10px;"></span>Approve
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<input type="hidden" id="member_id" value="{{member_id}}">
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("title").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("title").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+$(document).ready(function() {
+   $('.row #fb_photo').each(function(i) {
+       if(!checkimage(this.src)){
+            this.src = "/static/dating/images/img_not_available.png";
+       }
+   });
+});
+
+function checkimage(imageurl) {
+   try {
+    var img = document.createElement("img");
+    img.src = imageurl;
+
+   } catch(err)
+   {
+        //
+   }
+
+    if(img.height > 0) {
+       return true;
+    } else {
+       return false;
+    }
+}
+
+ScrollTo({{member_id}});
+
+function ScrollTo(name) {
+  //init thread
+  ScrollToResolver(document.getElementById(name));
+}
+
+function ScrollToResolver(elem) {
+  var jump = parseInt(elem.getBoundingClientRect().top * .2);
+  document.body.scrollTop += jump - 50;
+  document.documentElement.scrollTop += jump - 50;
+  //lastjump detects anchor unreachable, also manual scrolling to cancel animation if scroll > jump
+  if (!elem.lastjump || elem.lastjump > Math.abs(jump)) {
+    elem.lastjump = Math.abs(jump);
+    setTimeout(function() {
+      ScrollToResolver(elem);
+    }, "100");
+  } else {
+    elem.lastjump = null;
+  }
+}
+
+</script>
+
+{%else %}
+        <center>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h3 class="my_items col-sm-offset-1" style="color:red; margin: 30px;">No user provided with selfie...</h3></center>
+
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

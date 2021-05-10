@@ -1,0 +1,266 @@
+{% extends 'dating/base_file.html' %}
+{% block title %}Folder Home{% endblock %}
+{% block body %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta charset="utf-8">
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/pattern0.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+#edit {
+  width:auto;
+  margin:auto;
+  overflow: hidden;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 200;
+  line-height: 2;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 5px;
+  border: 1px solid #eee;
+  width:100%;
+  height: 35px;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+.submit{
+  color: #008CBA;
+  background:transparent;
+  text-align: center;
+  width: auto;
+  border:0;
+  height:30px;
+  padding-left:15px;
+  padding-right:15px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight:600;
+}
+
+.form-group {
+  overflow: hidden;
+  width:auto;
+}
+
+.contentform {
+  padding: 10px;
+}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<a href="/filelogout">
+    <img src="/static/dating/images/backicon.png" style="position:relative; width:40px; height:40px; border-radius:50%; border:2px solid white; z-index:100; left:3%; top:10px;">
+</a>
+
+<div id="title" style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;
+	position:fixed; left:50%; float:middle; transform:translate(-50%, -50%); width:350px; z-index:100; top:92px; display:none;">My Folder Home</div>
+
+<div id="frame" style="width:100%;">
+    <div style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">My Folder Home</div><br>
+    <div style="text-align:center;">
+        <a href="javascript:void(0);" onclick="document.getElementById('createfolderBox').style.display='block';">
+            <span class="glyphicon glyphicon-plus" style="color:black; font-size:14px; margin-right:10px;"></span>Create new folder
+        </a><br>
+        <a href="/mynotes" style="color:green; font-weight:600;">
+            <span class="fa fa-book" style="font-size:22px; margin:10px;"></span>WRITE DOWN
+        </a>
+    </div>
+    {% if folders %}
+    <div class="container-fluid">
+        <div class="row">
+            {% for folder in folders %}
+            <div class="col-sm-3" style="padding-bottom:15px;">
+                <div class="contentform">
+                    <div>
+                        <div class="form-group">
+                            <center>
+                                <a href="/openfolder/{{folder.id}}/">
+                                    {% if folder.files != '0' %}
+                                    <img src="/static/dating/images/fullfoldericon.png" style="width:250px; height:200px; position:relative;">
+                                    <div style="position:absolute; font-size:25px; color:white; left:45%; top:40%;">{{folder.files}}</div>
+                                    {% else %}<img src="/static/dating/images/foldericon.png" style="width:250px; height:200px;">
+                                    {% endif %}
+                                </a>
+                                <form action="/savefolder/{{folder.id}}/" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input name="name" autocomplete="off" style="text-align:center; width:250px; background:transparent; border:0;" value="{{folder.name}}" onfocus="javascript:openmenu(this);">
+                                    <div class="menu" style="background:white; border-radius:5px; padding:3px; font-size:20px; display:none; width:120px;">
+                                        <img src="/static/dating/images/cancel.png" style="width:15px; height:15px; float:right;" onclick="javascript:this.parentElement.style.display='none';">
+                                        <div style="padding:10px; display:inline-block;">
+                                            <button type="submit" style="float:left; background:transparent; border:0;"><span class="glyphicon glyphicon-save"></span></button>
+                                            <button type="submit" formaction="/deletefolder/{{folder.id}}/" onclick="return confirm('Are you sure delete this folder?');"
+                                                    style="float:left; background:transparent; border:0; margin-left:15px;"><span class="glyphicon glyphicon-trash"></span></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {%else %}
+        <center>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h3 class="my_items col-sm-offset-1" style="color:red; margin: 30px;">No folder created ...</h3></center>
+
+    {% endif %}
+</div>
+
+<form id="createfolderBox" style="font-size:16px; font-weight:300; color: black; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:5px; padding:8px;
+	transform:translate(-50%, -50%); min-width:350px; max-width:500px; width:auto; z-index:200; top:300px; display:none;" action="/createnewfolder" method="post" enctype="multipart/form-data">
+    <img src="/static/dating/images/foldericon.png" style="width:35px; height:30px; float:left;">
+    <img src="/static/dating/images/cancel.png" style="width:20px; height:20px; float:right;" onclick="javascript:document.getElementById('createfolderBox').style.display='none';">
+    {% csrf_token %}
+    <div style="text-align:center; width:100%; margin-top:20px; margin-bottom:20px;">
+        <input type="text" placeholder="Enter folder name" name="name" style="width:90%; margin-top:20px; margin-bottom:20px;">
+        <button class="submit">CREATE</button>
+    </div>
+</form>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("title").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("title").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+var menu;
+
+function openmenu(obj){
+  var menus = document.getElementById("frame").querySelectorAll("div.menu");
+  var i;
+  for(i=0; i<menus.length; i++){
+    menus[i].style.display = "none";
+  }
+  menu = obj.parentElement.querySelector('.menu');
+  menu.style.display = "block";
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

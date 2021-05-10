@@ -1,0 +1,618 @@
+{% extends 'dating/base_control.html' %}
+{% block title %}Photo approval{% endblock %}
+{% block body %}
+<br>
+<br>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta charset="utf-8">
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/pattern0.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+img {
+  border-radius: 5%;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:550px;
+  width:auto;
+  margin:auto;
+  background:linear-gradient(0deg,rgba(100,50,250,0.0),rgba(100,50,250,0.3),rgba(100,50,250,0.3),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(50,100,250,0.2));
+  background-size:cover;
+  overflow: hidden;
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.2);
+}
+#edit:hover {
+  background:linear-gradient(0deg,rgba(100,50,250,0.0),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(50,100,250,0.3));
+  background-size:cover;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 200;
+  line-height: 2;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 5px;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 42px;
+  float: left;
+  padding: 0px 10px;
+  opacity: 0.8;
+  color:blue;
+}
+
+.bouton-update{
+  background-color: #008CBA;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 10px 10px;
+}
+
+textarea {
+  border-radius: 5px;
+  border: 1px solid #EEE;
+  width: 100%;
+  height: 80px;
+  float: left;
+  padding: 10px 15px;
+  opacity: 0.8;
+  color:blue;
+  text-align:left;
+}
+
+label input {
+  display: none;/* <-- hide the default checkbox */
+}
+label span {/* <-- style the artificial checkbox */
+  height: 35px;
+  width: 35px;
+  padding-bottom:6px;
+  margin-right:5px;
+  display: inline-block;
+  position: relative;
+}
+[type=checkbox]:checked + span:before {/* <-- style its checked state..with a ticked icon */
+  content: '\2714';
+  position: absolute;
+  font-size:30px;
+  top: 0px;
+  left: 2px;
+}
+
+[type=checkbox]:checked + span:after {/* <-- style its checked state..with a ticked icon */
+  content: '\2714';
+  position: absolute;
+  top: 0px;
+  bottom:5px;
+  left: 2px;
+  font-size:30px;
+  color:red;
+}
+
+#backgroundOverlay{
+    background-color:rgba(0,0,0,0.3);
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display:none;
+}
+
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAR9klXdjAN4d58R47o82ghwgkFpR0lzKs",
+    databaseURL: "https://datingapp-206116.firebaseio.com",
+    projectId: "datingapp-206116",
+    storageBucket: "datingapp-206116.appspot.com"
+  };
+  firebase.initializeApp(config);
+</script>
+
+{% if note == 'update' %}
+<input type="hidden" id="memberid" value="{{member_id}}">
+<script>
+firebase.database().ref('updatedmembership' + '/' + document.getElementById("memberid").value).remove();
+firebase.database().ref('updatedmembership' + '/' + document.getElementById("memberid").value).push().set({
+  noti: 'Your membership has been updated',
+  time: new Date().getTime(),
+});
+</script>
+{% endif %}
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div id="title" style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;
+	position:fixed; left:50%; float:middle; transform:translate(-50%, -50%); width:350px; z-index:100; top:92px; display:none;">Control users</div>
+
+<img src="/static/dating/images/appicon.png" style="position:relative; width:60px; height:60px; border-radius:50%; border:2px solid yellow; z-index:100; left:3%; top:50px;">
+
+{% if result == 'success' %}
+<script>alert("Successfully logged in")</script>
+{% endif %}
+
+{% if users %}
+<div style="width:100%; height:auto;">
+    <div style="font-size:25px; font-weight:800; margin-bottom:30px;
+        color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">Control users</div>
+    <div class="container-fluid" style="margin-top:3%;">
+        <div class="row">
+            {% for user in users %}
+            <div class="col-sm-4" style="padding-bottom:15px;" id="{{user.id}}">
+                <div id="edit">
+                    <!--<input type="hidden" id="user_id" value="{{user_id}}">-->
+                    <div class="contentform">
+                        <div style="width:100%;">
+                            <div style="width:100%; height:135px;">
+                                <a href="javascript:void(0)" style="display:inline-block; float:right; border-radius:50px;">
+                                    <label style="margin-right:10px; color: #04a2be; border-radius:5px; font-size:16px;">
+                                        <input type="checkbox" name="users[]" value="{{user.id}}" class="chx" style="width:15px; height:15px;" onchange="highlight(this)">
+                                        <span></span><i class="fa fa-user-plus" style="color: #04a2be; font-size:22px; padding-right:5px;"></i>
+                                    </label>
+                                </a>
+                                <div style="padding:10px; width:45%; float:left;">
+                                    <center>
+                                        <div style="color:white; font-size:16px;">Selfie photo</div><br>
+                                        <a href="/view_image?photo_url={{user.photo_url}}">
+                                            <img src="{{user.photo_url}}" style="max-width:150px; width:auto; height:auto; max-height:170px;">
+                                        </a>
+                                    </center>
+                                </div>
+                                <div style="padding:10px; width:45%; float:left; margin-left:10px;">
+                                    <center>
+                                        <div id="fb_caption" style="color:white; font-size:16px;">Facebook photo</div><br>
+                                        <a href="{{user.fb_photo}}" target="_blank">
+                                            <img src="{{user.fb_photo}}" id="fb_photo" style="max-width:110px; width:auto; height:auto; max-height:130px;">
+                                        </a>
+                                    </center>
+                                </div>
+                            </div>
+                            <div style="padding-left:30px; color: white; float:left; font-weight:600; font-size:18px; width:100%; text-align:left;">
+                                {{user.name}}
+                            </div>
+                            <div style="float:right; width:auto; text-align:left;">
+                                {% if user.password == 'deactivated' %}
+                                    <label style="color: white; font-weight:600; font-size:16px; font-family:cursive; background:black; padding:1px 16px 3px 16px; margin-right:10px; border-radius:3px 50px 3px 50px; border:1.5px solid black;">
+                                        Deactived
+                                    </label>
+                                {% elif user.password == 'canceled' %}
+                                    <label style="color: white; font-weight:600; font-size:16px; font-family:cursive; background:black; padding:1px 16px 3px 16px; margin-right:10px; border-radius:3px 50px 3px 50px; border:1.5px solid black;">
+                                        Canceled
+                                    </label>
+                                {% else %}
+                                    {% if user.selfie_approved == 'yes' %}
+                                        <label style="color: red; font-weight:600; font-size:16px; font-family:cursive; padding:1px 16px 3px 16px; margin-right:10px;">Approved</label>
+                                    {% elif user.selfie_approved == 'no' %}
+                                        <label style="color: black; font-weight:600; font-size:16px; font-family:cursive; padding:1px 16px 3px 16px; margin-right:10px;">Rejected</label>
+                                    {% else %}
+                                        <label style="color: gray; font-weight:600; font-size:16px; font-family:cursive; padding:1px 16px 3px 16px; margin-right:10px;">Pending</label>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <div style="padding-left:30px; padding-right:8px; color: white; float:left; font-weight:500; font-size:14px; width:auto; text-align:left; white-space: pre-line; word-break: break-all; word-wrap: break-word;">
+                                {{user.email}}<br>{{user.age}}, {{user.gender}}, <img src="/static/dating/images/marker.png" style="width:18px; height:20px; margin-right:5px;">{{user.address}}
+                                {{user.premium}}
+                            </div>
+                            <div style="width:100%; text-align:right; float:left; margin-bottom:8px;">
+                                {% if user.password == '' %}
+                                    <a href="/deactivated/{{user.id}}/" class="btn btn-info btn-lg" onclick="return confirm('Are you sure deactivate this user?');"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:#4747d1; border:1px solid #eee;">
+                                        <span class="fa fa-close" style="padding-right:10px;"></span>Deactivate
+                                    </a>
+                                {% elif user.password == 'canceled' %}
+                                    <a href="javascript:void(0)" class="btn btn-info btn-lg"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:gray; border:1px solid #eee;">
+                                        <span class="fa fa-close" style="padding-right:10px;"></span>Deactivate
+                                    </a>
+                                {% else %}
+                                    <a href="/activated/{{user.id}}/" class="btn btn-info btn-lg" onclick="return confirm('Are you sure activate this user?');"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:red; border:1px solid #eee;">
+                                        <span class="fa fa-check" style="padding-right:10px;"></span>Activate
+                                    </a>
+                                {% endif %}
+                                {% if user.password == 'canceled' %}
+                                    <a href="javascript:void(0);" class="btn btn-info btn-lg"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:gray; border:1px solid #eee;">
+                                        <span class="fa fa-wrench" style="padding-right:10px;"></span>Update
+                                    </a>
+                                {% else %}
+                                    <a href="javascript:void(0);" class="btn btn-info btn-lg" onclick="javascript:selectUser({{user.id}});"
+                                        style="padding:5px 10px 5px 10px; font-size:16px; text-align:center; background:green; border:1px solid #eee;">
+                                        <span class="fa fa-wrench" style="padding-right:10px;"></span>Update
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<input type="hidden" id="member_id" value="{{member_id}}">
+
+<img src="/static/dating/images/notificationicon.png" style="left:20px; position:fixed; border-radius:10px; background:rgba(255, 255, 255, 0.8); width:60px; height:60px; bottom:20px; z-index:200; padding:5px; box-shadow:0px 0px 20px rgba(0,0,0,0.8);"
+     onclick="javascript:selectgroup();">
+
+<div id="backgroundOverlay"></div>
+
+<div id="membershipBox" style="font-size:16px; font-weight:300; color: black; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:10px; padding: 8px 15px 15px 15px;
+	transform:translate(-50%, -50%); min-width:350px; max-width:500px; width:auto; z-index:200; top:320px; display:none;">
+    {% csrf_token %}
+    <img src="/static/dating/images/membershipicon.png" style="border-radius:0px; width:30px; height:30px; float:left; margin-top:5px;">
+    <img src="/static/dating/images/cancel.png" style="width:25px; height:25px; float:right; margin-top:5px;" onclick="javascript:document.getElementById('membershipBox').style.display='none'; document.getElementById('backgroundOverlay').style.display='none';">
+    <div style="width:100%; display:inline-block;">
+        <div style="font-size:25px; font-weight:600; color: black; text-align:center; width:100%;">Select a plan</div>
+        <div class="contentform">
+            <form action="/userupdate" method="post" enctype="multipart/form-data" style="width:100%;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <p>Default <span>*</span></p>
+                    <div style="text-align:center; position:relative; display:inline-block;">
+                        <div style="width:100%;" id="0" onclick="javascript:select(this);">
+                            <input type="text" id="months" name="months" placeholder="- - -" value="{{plan.months}}" style="width:33%; float:left;" readonly>
+                            <input type="text" required id="dates" name="dates" placeholder="Dates" value="{{plan.dates}} dates" style="width:30%; float:left; margin-left:1%;" readonly>
+                            <input type="text" id="price" name="price" placeholder="- - -" value="{{plan.price}}" style="width:35%; float:left; margin-left:1%;" readonly>
+                            <img src="/static/dating/images/checkicon.png" id="icon" style="width:35px; height:35px; position:absolute; right:0px; top:0px; display:block;">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p>Premium <span>*</span></p>
+                    <div style="text-align:center; position:relative; display:inline-block;">
+                        <div style="width:100%;" id="1" onclick="javascript:select(this);">
+                            <input type="text" required id="months1" name="months1" placeholder="Months" value="{{plan.months1}} months" style="width:33%; float:left;" readonly>
+                            <input type="text" required id="dates1" name="dates1" placeholder="Dates" value="{{plan.dates1}} dates" style="width:30%; float:left; margin-left:1%;" readonly>
+                            <input type="text" required id="price1" name="price1" placeholder="Price($)" value="$ {{plan.price1}}" style="width:35%; float:left; margin-left:1%;" readonly>
+                            <img src="/static/dating/images/checkicon.png" id="icon1" style="width:35px; height:35px; position:absolute; right:0px; top:0px; display:none;">
+                        </div>
+                    </div>
+                    <div style="margin-top:5px; text-align:center; position:relative; display:inline-block;">
+                        <div style="width:100%;" id="2" onclick="javascript:select(this);">
+                            <input type="text" required id="months2" name="months2" placeholder="Months" value="{{plan.months2}} months" style="width:33%; float:left;" readonly>
+                            <input type="text" required id="dates2" name="dates2" placeholder="Dates" value="{{plan.dates2}} dates" style="width:30%; float:left; margin-left:1%;" readonly>
+                            <input type="text" required id="price2" name="price2" placeholder="Price($)" value="$ {{plan.price2}}" style="width:35%; float:left; margin-left:1%;" readonly>
+                            <img src="/static/dating/images/checkicon.png" id="icon2" style="width:35px; height:35px; position:absolute; right:0px; top:0px; display:none;">
+                        </div>
+                    </div>
+                    <div style="margin-top:5px; text-align:center; position:relative; display:inline-block;">
+                        <div style="width:100%;" id="3" onclick="javascript:select(this);">
+                            <input type="text" required id="months3" name="months3" placeholder="Months" value="{{plan.months3}} months" style="width:33%; float:left;" readonly>
+                            <input type="text" required id="dates3" name="dates3" placeholder="Dates" value="{{plan.dates3}} dates" style="width:30%; float:left; margin-left:1%;" readonly>
+                            <input type="text" required id="price3" name="price3" placeholder="Price($)" value="$ {{plan.price3}}" style="width:35%; float:left; margin-left:1%;" readonly>
+                            <img src="/static/dating/images/checkicon.png" id="icon3" style="width:35px; height:35px; position:absolute; right:0px; top:0px; display:none;">
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" required id="plan" name="plan" value="0">
+                <input type="hidden" required id="user_id" name="user_id" value="">
+                <br>
+                <button type="submit" class="bouton-update">Setup</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="notificationBox" style="font-size:16px; font-weight:300; color: black; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:10px; padding: 8px 15px 15px 15px;
+	transform:translate(-50%, -50%); min-width:350px; max-width:500px; width:auto; z-index:200; top:320px; display:none;">
+    {% csrf_token %}
+    <img src="/static/dating/images/notificationicon.png" style="border-radius:0px; width:30px; height:30px; float:left; margin-top:5px;">
+    <img src="/static/dating/images/cancel.png" style="width:25px; height:25px; float:right; margin-top:5px;"
+         onclick="javascript:document.getElementById('notificationBox').style.display='none'; document.getElementById('backgroundOverlay').style.display='none';">
+    <div style="width:100%; display:inline-block;">
+        <div class="contentform">
+            <div style="font-size:25px; font-weight:600; color: black; text-align:center; width:100%;">Send notification</div><br>
+            <form action="javascript:void(0);" method="post" enctype="multipart/form-data" style="width:100%;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+                    <textarea rows="5" id="textarea" placeholder="Write something to them ..." style="max-height:250px;"></textarea>
+                    <script>autosize(document.getElementById("textarea"));</script>
+                </div>
+                <br>
+                <div>
+                    <button type="submit" class="bouton-update" onclick="javascript:sendNotification();">Sumit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="alert" style="font-size:16px; font-weight:300; color: black; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:10px; padding: 5px 15px 15px 15px;
+	transform:translate(-50%, -50%); width:300px; z-index:200; top:280px; display:none;">
+    <i class="fa fa-meh-o" style="font-size:22px; color:green;"></i><label style="font-size:20px; padding:10px;">Hint!</label>
+    <img src="/static/dating/images/cancel.png" style="width:25px; height:25px; float:right; margin-top:5px;"
+         onclick="javascript:document.getElementById('alert').style.display='none'; document.getElementById('backgroundOverlay').style.display='none';">
+	<div style="padding-left:15px; padding-right:15px;">Do you want to send message to all users?</div><br>
+    <div style="width:100%; text-align:center;">
+        <label style="width:40%; text-align:center; padding:3.5px; float:left; border-radius:20px; border:1px solid blue; color:blue; margin-left:5%;" onclick="no()" >No</label>
+        <label style="width:40%; text-align:center; padding:3.5px; float:left; border-radius:20px; border:1px solid blue; background:blue; color:white; margin-left:10%;" onclick="yes()" >Yes</label>
+    </div>
+</div>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("title").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("title").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+$(document).ready(function() {
+   $('.row #fb_photo').each(function(i) {
+       if(!checkimage(this.src)){
+            this.src = "/static/dating/images/img_not_available.png";
+       }
+   });
+});
+
+function checkimage(imageurl) {
+   try {
+    var img = document.createElement("img");
+    img.src = imageurl;
+
+   } catch(err)
+   {
+        //
+   }
+
+    if(img.height > 0) {
+       return true;
+    } else {
+       return false;
+    }
+}
+
+var m = 0;
+function highlight(obj){
+   if(obj.checked) {
+      $(obj).parent().parent().css("background","yellow");
+      m++;
+   }else{ $(obj).parent().parent().css("background","transparent");m--;}
+}
+
+var chxarr = [];
+
+function selectgroup(){
+   chxarr = [];
+   var userchxs =  document.getElementsByName("users[]");
+   var chxlength = userchxs.length;
+
+   for(k=0;k < chxlength;k++){
+      if(userchxs[k].checked) {
+         chxarr.push(userchxs[k].value);
+      }
+   }
+
+   if(chxarr.length == 0){
+      if(document.getElementById("membershipBox").style.display == "block")return;
+      document.getElementById("alert").style.display="block";
+      document.getElementById("backgroundOverlay").style.display="block";
+      return;
+   }
+   document.getElementById("notificationBox").style.display="block";
+   document.getElementById("backgroundOverlay").style.display="block";
+}
+
+function yes(){
+    document.getElementById("notificationBox").style.display="block";
+    document.getElementById("alert").style.display="none";
+    chxarr = [];
+    var userchxs =  document.getElementsByName("users[]");
+    var chxlength = userchxs.length;
+
+    for(k=0;k < chxlength;k++){
+       chxarr.push(userchxs[k].value);
+    }
+}
+
+function no(){
+    document.getElementById("alert").style.display="none";
+    document.getElementById("backgroundOverlay").style.display="none";
+    alert("Please select users you want to send message to.");
+}
+
+ScrollTo({{member_id}});
+
+function ScrollTo(name) {
+  //init thread
+  ScrollToResolver(document.getElementById(name));
+}
+
+function ScrollToResolver(elem) {
+  var jump = parseInt(elem.getBoundingClientRect().top * .2);
+  document.body.scrollTop += jump - 50;
+  document.documentElement.scrollTop += jump - 50;
+  //lastjump detects anchor unreachable, also manual scrolling to cancel animation if scroll > jump
+  if (!elem.lastjump || elem.lastjump > Math.abs(jump)) {
+    elem.lastjump = Math.abs(jump);
+    setTimeout(function() {
+      ScrollToResolver(elem);
+    }, "100");
+  } else {
+    elem.lastjump = null;
+  }
+}
+
+function selectUser(userid){
+    document.getElementById('membershipBox').style.display = 'block';
+    document.getElementById('backgroundOverlay').style.display='block';
+    document.getElementById('user_id').value = userid;
+}
+
+function select(obj){
+   document.getElementById("icon").style.display = "none";
+   document.getElementById("icon1").style.display = "none";
+   document.getElementById("icon2").style.display = "none";
+   document.getElementById("icon3").style.display = "none";
+   obj.querySelector("img").style.display = "block";
+   document.getElementById("plan").value = obj.id;
+}
+
+function sendNotification(){
+    if(document.getElementById("textarea").value.length == 0){
+        alert("Please enter your message ...");
+        return;
+    }
+    for(var i=0; i<chxarr.length; i++){
+        firebase.database().ref('adminnotification' + '/' + chxarr[i]).remove();
+        firebase.database().ref('adminnotification' + '/' + chxarr[i]).push().set({
+          noti: document.getElementById("textarea").value,
+          time: new Date().getTime(),
+        });
+    }
+    document.getElementById("notificationBox").style.display="none";
+    document.getElementById("backgroundOverlay").style.display="none";
+    setTimeout(function() {
+        alert("Your message has been sent to them");
+    }, 1000);
+}
+
+</script>
+
+{%else %}
+        <center>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h3 class="my_items col-sm-offset-1" style="color:red; margin: 30px;">No user ...</h3></center>
+
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

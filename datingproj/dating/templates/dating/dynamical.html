@@ -1,0 +1,342 @@
+{% extends 'dating/base_home.html' %}
+{% block title %}Dynamical Questions{% endblock %}
+{% block body %}
+
+<br>
+<br>
+
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/pattern0.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:800px;
+  width:auto;
+  height:auto;
+  margin-top: 2%;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+a {
+  text-decoration:inherit
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 30px;
+  float:middle;
+  margin:auto;
+}
+
+input {
+  border-radius: 50px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 100%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+textarea {
+  border-radius: 5px;
+  border: 1px solid #EEE;
+  width: 100%;
+  height: 60px;
+  float: left;
+  padding: 10px 15px;
+  opacity: 0.8;
+  color:blue;
+  text-align:left;
+}
+
+.bouton-update{
+  background-color: #008CBA;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+  padding: 0px;
+}
+
+label{font-weight:600; color:#0066cc; font-size:15px;}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAR9klXdjAN4d58R47o82ghwgkFpR0lzKs",
+    databaseURL: "https://datingapp-206116.firebaseio.com",
+    projectId: "datingapp-206116",
+    storageBucket: "datingapp-206116.appspot.com"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% if note == 'exist' %}<script>alert("This dynamical question already exists");</script>{% endif %}
+
+{% if note == 'update' %}
+<script>
+firebase.database().ref('dynamical').remove();
+firebase.database().ref('dynamical').push().set({
+  noti: 'Your question has been updated',
+  time: new Date().getTime(),
+});
+</script>
+{% endif %}
+
+<img src="/static/dating/images/appicon.png" style="position:relative; width:60px; height:60px; border-radius:50%; border:2px solid yellow; z-index:100; left:3%; top:50px;">
+
+<div id="title" style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;
+	position:fixed; left:50%; float:middle; transform:translate(-50%, -50%); width:350px; z-index:100; top:92px; display:none;">Dynamical questions</div>
+
+<div id="edit">
+    <div style="font-size:25px; font-weight:800; margin-bottom:30px;
+            color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">Add a new question</div>
+    <div class="contentform">
+        <form action="/add_dynamical" method="post" enctype="multipart/form-data" style="width:100%;">
+            {% csrf_token %}
+            <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+            <div class="form-group">
+                <textarea name="text"  rows="3" data-rule="required" data-msg="" required id="text" placeholder="Enter a dynamical question"></textarea>
+            </div>
+            <script>autosize(document.getElementById("text"));</script><br>
+            <button type="submit" class="bouton-update">Submit</button>
+        </form>
+    </div>
+
+    <div style="font-size:25px; font-weight:800; margin-bottom:20px; margin-top:20px;
+            color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">Dynamical questions</div>
+
+    <div style="width:100%; margin-bottom:50px;">
+        <div class="contentform">
+            <div class="formcontent">
+                {% if questions %}
+                    {% for question in questions %}
+                        <div style="width:100%; padding:5px 10px 5px 10px; font-size:18px; color:black; text-align:left;">{{question.dynamical_question}}</div>
+                        <div style="width:100%; text-align:right; float:left; margin-bottom:8px;">
+                            <a href="/delete_dynamical/{{question.id}}/" class="btn btn-info btn-lg" onclick="return confirm('Are you sure delete this questionnaire?');"
+                               style="padding:6px; margin-left:5px; font-size:18px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                            <a href="javascript:void(0);" class="btn btn-info btn-lg" onclick="showEditBox(this,{{question.id}});"
+                               style="padding:6px; margin-left:5px; font-size:18px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                <span class="glyphicon glyphicon-pencil"></span><div style="display:none;">{{question.dynamical_question}}</div>
+                            </a>
+                        </div>
+                        <div style="width:75%; height:3px; border-radius:50px; background-color:#99ccff; margin:15px;"></div>
+                    {% endfor %}
+                {% else %}
+                    <center>
+                        <h5 class="my_items col-sm-offset-1" style="color:red; margin: 10px;">No dynamical question set up ...</h5></center>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editBox" style="font-size:16px; font-weight:300; color: black; box-shadow: 0px 0px 100px rgba(0, 0, 0, 1.0);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:10px; padding: 10px;
+	transform:translate(-50%, -50%); min-width:350px; max-width:500px; width:auto; z-index:200; top:320px; display:none;">
+    {% csrf_token %}
+    <img src="/static/dating/images/appicon.png" style="border-radius:0px; width:30px; height:30px; float:left; margin-top:5px;">
+    <img src="/static/dating/images/cancel.png" style="width:25px; height:25px; float:right; margin-top:5px;" onclick="javascript:document.getElementById('editBox').style.display='none';">
+    <div style="width:100%; display:inline-block;">
+        <div style="font-size:25px; font-weight:600; color: black; text-align:center; width:100%;">Edit questionnaire</div>
+        <br>
+        <div>
+            <form action="/questionupdate" method="post" enctype="multipart/form-data" style="width:100%;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div style="text-align:center; width:100%;; display:inline-block;">
+                        <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+                        <textarea name="q" required id="q" style="border-radius:3px;"></textarea>
+                        <input type="hidden" id="qid" name="qid" value="">
+                        <script>autosize(document.getElementById("q"));</script>
+                    </div>
+                </div>
+                <br>
+                <button type="submit" class="bouton-update">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("title").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("title").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+function getCookie(name) {
+    console.log('getCookie');
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                    }
+            }
+    }
+    console.log('cookie:' + cookieValue);
+    return cookieValue;
+}
+
+function post(path, params, method) {
+   method = method || "post"; // Set method to post by default if not specified.
+
+   // The rest of this code assumes you are not using a library.
+   // It can be made less wordy if you use one.
+   var form = document.createElement("form");
+   form.setAttribute("method", method);
+   form.setAttribute("action", path);
+
+   for(var key in params) {
+      if(params.hasOwnProperty(key)) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", key);
+          hiddenField.setAttribute("value", params[key]);
+
+          form.appendChild(hiddenField);
+      }
+   }
+
+   var hiddenField1 = document.createElement("input");
+   hiddenField1.setAttribute("type", "hidden");
+   hiddenField1.setAttribute("name", 'csrfmiddlewaretoken');
+   hiddenField1.setAttribute("value", getCookie('csrftoken'));
+   form.appendChild(hiddenField1);
+
+   document.body.appendChild(form);
+   form.submit();
+}
+
+function showEditBox(obj, qid){
+    document.getElementById('editBox').style.display='block';
+    document.getElementById('q').value = obj.querySelector("div").innerHTML;
+    document.getElementById('qid').value = qid;
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

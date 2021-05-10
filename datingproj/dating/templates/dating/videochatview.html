@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/pattern0.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+</style>
+
+<body>
+<p>
+  <button id="call-btn">Call</button>
+</p>
+  <!-- The Gruveo embed's <iframe> will replace this <div> tag. -->
+ <div id="myembed"></div>
+
+<script>
+  var clientId = "demo";
+
+  var tag = document.createElement("script");
+  tag.src = "https://www.gruveo.com/embed-api/";
+  var firstScriptTag = document.getElementsByTagName("script")[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var embed;
+  function onGruveoEmbedAPIReady() {
+    embed = new Gruveo.Embed("myembed", {
+      width: 680,
+      height: 465,
+      embedParams: {
+        clientid: clientId,
+        color: "63b2de",
+        branding: false
+      }
+    });
+
+    embed
+      .on("error", onEmbedError)
+      .on("requestToSignApiAuthToken", onEmbedRequestToSignApiAuthToken)
+      .on("ready", onEmbedReady)
+      .on("stateChange", onEmbedStateChange);
+  }
+
+  function onEmbedError(e) {
+    console.error("Received error " + e.error + ".");
+  }
+
+  function onEmbedRequestToSignApiAuthToken(e) {
+    var tokenHmac;
+    // ...
+    // Compute the HMAC of e.token. Do it server-side only so you don't
+    // expose your API secret in the client code!
+    // ...
+    embed.authorize(tokenHmac);
+  }
+
+  function onEmbedReady(e) {
+    document.getElementById("call-btn").addEventListener("click", function() {
+      embed.call("mycode123", true);
+    });
+  }
+
+  function onEmbedStateChange(e) {
+    if (e.state == "call") {
+      setTimeout(function() {
+        embed.end();
+      }, 10000);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+{% extends 'dating/base_file.html' %}
+{% block title %}Notebook{% endblock %}
+{% block body %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta charset="utf-8">
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/copybackground.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+img {
+  border-radius: 5%;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:550px;
+  width:auto;
+  margin:auto;
+  background:linear-gradient(0deg,rgba(100,50,250,0.0),rgba(100,50,250,0.3),rgba(100,50,250,0.3),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(50,100,250,0.2));
+  background-size:cover;
+  overflow: hidden;
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.2);
+}
+#edit:hover {
+  background:linear-gradient(0deg,rgba(100,50,250,0.0),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(100,50,250,0.4),rgba(50,100,250,0.3));
+  background-size:cover;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 200;
+  line-height: 2;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 5px 5px 0px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+  width: 100%;
+  height: 42px;
+  float: left;
+  padding: 0px 15px;
+  opacity: 0.95;
+  color:black;
+  font-weight:550;
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 10px;
+}
+
+textarea {
+  border-radius: 0px 0px 5px 5px;
+  border: 1px solid #EEE;
+  width: 100%;
+  height: 60px;
+  float: left;
+  padding: 10px 15px;
+  opacity: 0.95;
+  color:black;
+  text-align:left;
+}
+
+.bouton-update{
+  background-color: #008CBA;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#frame {
+  border-radius: 5px;
+  max-width:800px;
+  width:auto;
+  height:auto;
+  margin-top: 8px;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<a href="/folderhome">
+    <img src="/static/dating/images/backicon.png" style="position:relative; width:40px; height:40px; border-radius:50%; border:2px solid white; z-index:100; left:3%; top:10px;">
+</a>
+
+<div id="title" style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;
+	position:fixed; left:50%; float:middle; transform:translate(-50%, -50%); width:350px; z-index:100; top:92px; display:none;">My Notes</div>
+
+<div style="width:100%; height:auto;">
+    <div style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">My Notes</div>
+    <div class="contentform" style="text-align:center;">
+        <a href="/addnote">
+            <span id="showaddnote" class="glyphicon glyphicon-plus" style="color:black; font-size:14px;"></span>
+        </a>
+    </div>
+    {% if notes %}
+    <div class="container-fluid" style="margin-top:15px;">
+        <div class="row">
+            {% for note in notes %}
+            <div class="col-sm-4" style="padding-bottom:15px;">
+                <div id="edit">
+                    <!--<input type="hidden" id="user_id" value="{{user_id}}">-->
+                    <div class="contentform">
+                        <form style="width:100%;" action="javascript:void(0);" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" name="caption" placeholder="Enter a caption" value="{{note.caption}}" style="font-size:20px;">
+                                <textarea name="text"  rows="100" data-rule="required" data-msg="" required id="text"
+                                          class="notetext" placeholder="Enter a bid text" style="height: 200px;">{{note.text}}</textarea>
+                            </div>
+                            <div style="width:100%; text-align:right; float:left; margin-bottom:8px;">
+                                <a href="/deletenote/{{note.id}}/" class="btn btn-info btn-lg" onclick="return confirm('Are you sure delete this note?');"
+                                   style="padding:6px; margin-left:5px; font-size:18px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                                <button class="btn btn-info btn-lg" formaction="/savenote/{{note.id}}/" type="submit"
+                                   style="padding:6px; margin-left:5px; font-size:18px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                    <span class="glyphicon glyphicon-save"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {%else %}
+        <center>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h3 class="my_items col-sm-offset-1" style="color:red; margin: 30px;">No note written ...</h3></center>
+
+    {% endif %}
+</div>
+<input type="hidden" id="member_id" value="{{member_id}}">
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("title").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("title").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

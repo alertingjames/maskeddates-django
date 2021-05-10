@@ -1,0 +1,107 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Masked Dates Admin{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/dating/style.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="/static/dating/images/appicon.png" type="image/jpg">
+
+    <link href="/static/dating/images/apple-touch-icon.png" rel="apple-touch-icon" />
+    <link href="/static/dating/images/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+    <link href="/static/dating/images/apple-touch-icon-167x167.png" rel="apple-touch-icon" sizes="167x167" />
+    <link href="/static/dating/images/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+    <link href="/static/dating/images/icon-hires.png" rel="icon" sizes="192x192" />
+    <link href="/static/dating/images/icon-normal.png" rel="icon" sizes="128x128" />
+
+<style>
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 40px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: yellow;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+#myBtn:hover {
+  background-color: red;
+}
+#advanced{
+    width:300px;
+    background-color:#000000;
+}
+.menu{
+    margin-left:10px;
+}
+</style>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>-->
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+
+                <li class="" style="margin-right:50px;">
+                    <a href="/home">
+                        <h4 style=""><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ></span>&nbsp; Photo approval</h4>
+                    </a>
+                </li>
+                <li class="" style="margin-right:50px;">
+                    <a href="/questions">
+                        <h4 style=""><span class="glyphicon glyphicon-question-sign" aria-hidden="true" ></span>&nbsp; Dynamical questions</h4>
+                    </a>
+                </li>
+                <li class="" style="margin-right:50px;">
+                    <a href="/editmembership">
+                        <h4 style=""><span class="glyphicon glyphicon-usd" aria-hidden="true" ></span>&nbsp; Membership plans</h4>
+                    </a>
+                </li>
+                <li class="" style="margin-right:50px;">
+                    <a href="/control">
+                        <h4 style=""><span class="glyphicon glyphicon-cog" aria-hidden="true" ></span>&nbsp; Control</h4>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                    <a href="{% url 'logout'%}">
+                        <h4><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout</h4>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    </nav>
+
+{% block body %}
+    {% endblock %}
+
+
+</body>
+</html>
+

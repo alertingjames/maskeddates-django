@@ -1,0 +1,318 @@
+{% extends 'dating/base_file.html' %}
+{% block title %}File Home{% endblock %}
+{% block body %}
+
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/pattern0.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:800px;
+  width:auto;
+  height:auto;
+  margin-top: 10px;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+a {
+  text-decoration:inherit
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 10px;
+  float:middle;
+  margin:auto;
+}
+
+label.cameraButton {
+  display: inline-block;
+  /* Styles to make it look like a button */
+  padding-top: 0.6em;
+  padding-bottom: 0.3em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border: 2px solid #666;
+  border-color: #EEE #CCC #CCC #EEE;
+  border-radius:8px 8px 50px 50px;
+  font-size:16px;
+  color:white;
+  width:180px;
+  height:45px;
+  text-align:middle;
+  background-color: green;
+}
+
+/* Look like a clicked/depressed button */
+label.cameraButton:active {
+  border-color: #CCC #EEE #EEE #CCC;
+}
+
+/* This is the part that actually hides the 'Choose file' text box for camera inputs */
+label.cameraButton input {
+  display: none;
+}
+
+label input {
+  display: none;/* <-- hide the default checkbox */
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+  padding: 0px;
+}
+
+#snackbar {
+    visibility: hidden;
+    min-width: 200px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 12px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<a href="/folderhome">
+    <img src="/static/dating/images/backicon.png" style="position:relative; width:40px; height:40px; border-radius:50%; border:2px solid white; z-index:100; left:3%; top:10px;">
+</a>
+
+<img src="/static/dating/images/loading.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle; border-radius: 1px;
+	transform:translate(-50%, -50%); width:100px; z-index:100; top:120px; display: none;" id="gif">
+
+<div id="title" style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;
+	position:fixed; left:50%; float:middle; transform:translate(-50%, -50%); width:350px; z-index:100; top:30px; display:none;">File Home</div>
+
+<div id="edit">
+    <div style="font-size:25px; font-weight:800; margin-bottom:10px;
+            color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">File Home<br>
+        <label style="color:black; text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.7); font-weight:500; font-size:14px;">{{folder_name}}</label>
+    </div>
+    <div class="contentform" style="text-align:center; width:350px;">
+        <form style="float:left;" id="form" action="/addfile" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" id="folder_id" name="folder_id" value="{{folder_id}}">
+            <center>
+                <label class="cameraButton">Load new file
+                    <input type="file" name="file" id="file"/>
+                </label>
+            </center>
+        </form>
+        <a href="/mybids/{{folder_id}}" style="color:green; margin-left:15px; float:left; font-size:16px; font-weight:600;">
+            <span class="fa fa-thumbs-o-up" style="font-size:20px; margin:10px;"></span>My Bids
+        </a>
+        <script>
+            $(document).on("change", "#file", function(evt) {
+                 document.getElementById("form").submit();
+                 document.getElementById("gif").style.display = "block";
+            });
+        </script>
+    </div>
+    <fieldset style="border:2px solid white; width:98%; margin-bottom:50px; margin-left:1%; margin-top:30px;">
+        <legend style="color:white; font-size:18px; font-weight:600;">
+            <div style="font-size:20px; font-weight:600; margin-top:30px; color: #F7D479; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.7); text-align:center;">
+                <span class="glyphicon glyphicon-share" style="margin-right:8px;"></span>Share files
+            </div>
+        </legend>
+        <div style="width:100%;">
+            <div class="contentform">
+                <div class="formcontent">
+                    {% if files %}
+                        {% for file in files %}
+                            <div style="width:100%; display:inline-block;">
+                                <a href="{{file.link}}" target="_blank">
+                                    <img src="{% if '.jpg' in file.link or '.png' in file.link or '.jpeg' in file.link or '.ico' in file.link or '.gif' in file.link %}{{file.link}}
+                                        {% elif '.zip' in file.link or '.rar' in file.link %}/static/dating/images/zipicon.png
+                                        {% elif '.doc' in file.link %}/static/dating/images/docicon.png
+                                        {% elif '.xls' in file.link %}/static/dating/images/excelicon.png
+                                        {% elif '.ppt' in file.link %}/static/dating/images/ppticon.png
+                                        {% elif '.pdf' in file.link %}/static/dating/images/pdficon.png
+                                        {% elif '.apk' in file.link %}/static/dating/images/apkicon.gif
+                                        {% elif '.exe' in file.link %}/static/dating/images/exeicon.ico
+                                        {% elif '.txt' in file.link %}/static/dating/images/txticon.png
+                                        {% elif '.mp4' in file.link or '.webm' in file.link or '.avi' in file.link or '.m4v' in file.link or '.3gp' in file.link or '.ogg' in file.link or '.mov' in file.link %}/static/dating/images/videoicon.png
+                                        {% elif '.wav' in file.link or '.mp3' in file.link or '.pcm' in file.link or '.vma' in file.link or '.aac' in file.link %}/static/dating/images/audioicon.png
+                                        {% else %}/static/dating/images/fileicon.png{% endif %}" style="width:60px; height:auto; max-height:60px;">
+                                </a>
+                                <span style="vertical-align:middle; margin-left:10px; font-size:18px; color:black; width:70%; text-align:left;
+                                    white-space: pre-line; word-break: break-all; word-wrap: break-word; display:inline-block;"
+                                      onclick="javascript:copy(this);">{{file.link}}</span>
+                            </div>
+                            <div style="width:100%; text-align:right; float:left; margin-bottom:8px;">
+                                <a href="/deletefile/{{folder_id}}/{{file.id}}/" class="btn btn-info btn-lg" onclick="return confirm('Are you sure delete this file?');"
+                                   style="padding:6px; margin-left:5px; font-size:18px; text-align:center; background:transparent; border:1px solid transparent; color:green;">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </div>
+                            <div style="width:85%; height:3px; border-radius:50px; background-color:#99ccff; margin:15px;"></div>
+                        {% endfor %}
+                    {% else %}
+                        <center>
+                            <h5 class="my_items col-sm-offset-1" style="color:red; margin: 10px;">No file uploaded ...</h5></center>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+
+<div id="snackbar">Copied to clipboard ...</div>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("title").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("title").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+function copy(obj) {
+    var range = document.getSelection().getRangeAt(0);
+    range.selectNode(obj);
+    window.getSelection().addRange(range);
+    document.execCommand("copy")
+    showToast();
+}
+
+function showToast() {
+    var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

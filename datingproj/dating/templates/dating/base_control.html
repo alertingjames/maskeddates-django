@@ -1,0 +1,161 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Masked Dates Admin{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/dating/style.css"/>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="/static/dating/images/appicon.png" type="image/jpg">
+
+    <link href="/static/dating/images/apple-touch-icon.png" rel="apple-touch-icon" />
+    <link href="/static/dating/images/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+    <link href="/static/dating/images/apple-touch-icon-167x167.png" rel="apple-touch-icon" sizes="167x167" />
+    <link href="/static/dating/images/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" />
+    <link href="/static/dating/images/icon-hires.png" rel="icon" sizes="192x192" />
+    <link href="/static/dating/images/icon-normal.png" rel="icon" sizes="128x128" />
+
+<style>
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 40px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: yellow;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+#myBtn:hover {
+  background-color: red;
+}
+.dropdown-menu{
+    width:250px;
+    background-color: #595959;
+}
+.menu{
+    margin-left:10px;
+    color: #BFBFBF;
+}
+
+a:hover{color:white;}
+
+</style>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>-->
+</head>
+<body>
+
+<nav id="navbar" class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+                <li class="" style="margin-right:50px;">
+                    <a href="/control">
+                        <h4 style=""><span class="glyphicon glyphicon-cog" aria-hidden="true" ></span>&nbsp; Control</h4>
+                    </a>
+                </li>
+                <li class="" style="margin-right:50px;">
+                    <a href="javascript:void(0);" onclick="javascript:showMenu();" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <h4><span class="glyphicon glyphicon-filter" aria-hidden="true"></span>&nbsp; Filter</h4>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="menu" style="margin-top:20px;"><h4><a href="/activated_users" onclick="javascript:showMenu();"><span class="glyphicon glyphicon-ok" style="margin-right:10px;"></span>Activated users</a></h4></li>
+                        <li class="menu" style="margin-top:20px;"><h4><a href="/deactivated_users" onclick="javascript:showMenu();"><span class="glyphicon glyphicon-remove" style="margin-right:10px;"></span>Deactivated users</a></h4></li>
+                    </ul>
+                </li>
+                <li class="" style="margin-right:50px; display:none;">
+                    <a href="/export_xlsx">
+                        <h4 style=""><span class="glyphicon glyphicon-file" aria-hidden="true" ></span>&nbsp; Export xlsx</h4>
+                    </a>
+                </li>
+            </ul>
+
+            <form class="navbar-form navbar-left" role="search" method="POST" action="/ctrsearch">
+                {% csrf_token %}
+                <h4><div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="q" value="" placeholder="Type a keyword...">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-success">Search</button>
+                        </span>
+                    </div>
+                </div></h4>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="" style="margin-right:50px;">
+                    <a href="/home">
+                        <h4 style=""><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ></span>&nbsp; Photo approval</h4>
+                    </a>
+                </li>
+                <li class="" style="margin-right:50px;">
+                    <a href="/questions">
+                        <h4 style=""><span class="glyphicon glyphicon-question-sign" aria-hidden="true" ></span>&nbsp; Dynamical questions</h4>
+                    </a>
+                </li>
+                <li class="" style="margin-right:50px;">
+                    <a href="/editmembership">
+                        <h4 style=""><span class="glyphicon glyphicon-usd" aria-hidden="true" ></span>&nbsp; Membership plans</h4>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{% url 'logout'%}">
+                        <h4><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout</h4>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<script>
+    var flag = false;
+    function showFilterBox(){
+        document.getElementById('filterBox').style.display='block';
+        $(".dropdown-menu").hide();
+        flag = false;
+        $('.navbar-collapse').collapse('hide');
+    }
+    function showMenu(){
+        if(!flag){
+            flag = true;
+            $(".dropdown-menu").show();
+        }else{
+            flag = false;
+            $(".dropdown-menu").hide();
+        }
+    }
+    $(document).click(function(){
+        $(".dropdown-menu").hide();
+        flag = false;
+        $('.navbar-collapse').collapse('hide');
+    });
+</script>
+
+{% block body %}
+{% endblock %}
+
+
+</body>
+</html>
+

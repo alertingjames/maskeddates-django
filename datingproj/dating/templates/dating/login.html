@@ -1,0 +1,287 @@
+{% extends 'dating/base.html' %}
+{% block title %}Google login{% endblock %}
+{% block body %}
+<br>
+<br>
+<br>
+<style>
+
+html, body{
+  background: url("/static/dating/images/loginbackground.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#form {
+  border-radius: 5px;
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-top: 5%;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#fff;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 10px;
+  float:middle;
+  margin:auto;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  <!--border-right: 1px dotted #CCC;-->
+  box-sizing: border-box;
+  padding: 0px 0px 0px 0px;
+}
+
+.bouton-update{
+  background-color: #0280d2;
+  color: #FFF;
+  text-align: center;
+  border:0;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 18px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  box-shadow:1px 1px 5px rgba(0, 0, 0, 0.8);
+}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<!--<script src="http://connect.facebook.net/en_US/all.js"></script>-->
+<!--<script>-->
+  <!--window.fbAsyncInit = function() {-->
+    <!--FB.init({-->
+      <!--appId      : '2135879913199883',-->
+      <!--xfbml      : true,-->
+      <!--version    : 'v3.0'-->
+    <!--});-->
+    <!--FB.AppEvents.logPageView();-->
+  <!--};-->
+
+  <!--(function(d, s, id){-->
+     <!--var js, fjs = d.getElementsByTagName(s)[0];-->
+     <!--if (d.getElementById(id)) {return;}-->
+     <!--js = d.createElement(s); js.id = id;-->
+     <!--js.src = "https://connect.facebook.net/en_US/sdk.js";-->
+     <!--fjs.parentNode.insertBefore(js, fjs);-->
+   <!--}(document, 'script', 'facebook-jssdk'));-->
+<!--</script>-->
+
+<meta name="google-signin-client_id" content="712038658577-pm0hgjs63dti4k0tftberd896js3dgn3.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js?onload=onLoadGoogleCallback" async defer></script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<img src="/static/dating/images/processing.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle; border-radius: 1px;
+	transform:translate(-50%, -50%); width:auto; z-index:100; top:120px; display: none;" id="gif">
+
+  <form id="form">
+	  {% csrf_token %}
+	    <!--<h1>Register</h1>-->
+
+    <div class="contentform">
+
+		<div class="formcontent">
+            <center>
+                <img src="/static/dating/images/applogo.png" style="width:70%; height:auto;">
+            </center>
+			<div class="form-group" style="margin-top:100px;">
+                <center>
+                    <button class="bouton-update" id="fb-button" style="width:80%; height:48px; text-align:center; display:none;" onclick="fb_login()">
+                        <img class="fb" src="/static/dating/images/facebookicon.png" style="height:38px; width: auto;"><label style="margin-left:20px;">Login with Facebook</label>
+                    </button>
+                    <button class="bouton-update" style="width:80%; height:48px; text-align:center;" id="googleSignIn">
+                        <img src="/static/dating/images/google.png" style="height:38px; width: auto;"><label style="margin-left:20px;">Login with Google</label>
+                    </button>
+                    <!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+                </center>
+			</div>
+	    </div>
+
+	</div>
+
+  </form>
+<script>
+
+    function fb_login(){
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                FB.logout(function(response) {
+                    // Person is now logged out
+                });
+            }
+            else {
+                FB.login(function(response) {
+                    getFBData();
+                }, {scope: 'public_profile, email'});
+            }
+        });
+    }
+
+    function getFBData () {
+        FB.api('/me', {fields: 'first_name, last_name, email, picture.type(large)'}, function(response) {
+            post('/loginAdmin', {fb_first_name:response.first_name, fb_last_name:response.last_name, fb_email:response.email, fb_photo:response.picture['data']['url']});
+        });
+    }
+
+    function onLoadGoogleCallback(){
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: '712038658577-pm0hgjs63dti4k0tftberd896js3dgn3.apps.googleusercontent.com',
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile'
+        });
+
+      auth2.attachClickHandler(element, {},
+        function(googleUser) {
+            console.log('Signed in: ' + googleUser.getBasicProfile().getName());
+            post('/loginAdmin', {name:googleUser.getBasicProfile().getName(), email:googleUser.getBasicProfile().getEmail(), photo:googleUser.getBasicProfile().getImageUrl()});
+            signOut();
+          }, function(error) {
+            console.log('Sign-in error', error);
+          }
+        );
+      });
+
+      element = document.getElementById('googleSignIn');
+    }
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+
+</script>
+
+<script>
+function getCookie(name) {
+    console.log('getCookie');
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                    }
+            }
+    }
+    console.log('cookie:' + cookieValue);
+    return cookieValue;
+}
+
+function post(path, params, method) {
+   method = method || "post"; // Set method to post by default if not specified.
+
+   // The rest of this code assumes you are not using a library.
+   // It can be made less wordy if you use one.
+   var form = document.createElement("form");
+   form.setAttribute("method", method);
+   form.setAttribute("action", path);
+
+   for(var key in params) {
+      if(params.hasOwnProperty(key)) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", key);
+          hiddenField.setAttribute("value", params[key]);
+
+          form.appendChild(hiddenField);
+      }
+   }
+
+   var hiddenField1 = document.createElement("input");
+   hiddenField1.setAttribute("type", "hidden");
+   hiddenField1.setAttribute("name", 'csrfmiddlewaretoken');
+   hiddenField1.setAttribute("value", getCookie('csrftoken'));
+   form.appendChild(hiddenField1);
+
+   document.body.appendChild(form);
+   form.submit();
+}
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

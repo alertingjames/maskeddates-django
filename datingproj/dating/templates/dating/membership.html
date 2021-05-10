@@ -1,0 +1,324 @@
+{% extends 'dating/base_home.html' %}
+{% block title %}Membership Plans{% endblock %}
+{% block body %}
+
+<br>
+<br>
+
+<style>
+
+html, body{
+  background:linear-gradient(0deg,rgba(20,150,250,0.1),rgba(0,100,250,0.1)), url("/static/dating/images/pattern1.jpg") no-repeat center center fixed;
+//  background:linear-gradient(0deg,rgba(200,220,250,0.96),rgba(200,220,250,0.96)), url("/static/dating/images/membershipbackground.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: blue;
+}
+#admin{
+    display:none;
+}
+
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:800px;
+  width:auto;
+  height:auto;
+  margin-top: 2%;
+  margin-bottom: 2% auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+a {
+  text-decoration:inherit
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  padding: 30px;
+  float:middle;
+  margin:auto;
+}
+
+input {
+  border-radius: 5px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+select {
+  border-radius: 5px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  height: 40px;
+  float: left;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:blue;
+}
+
+textarea {
+  border-radius: 5px 5px 5px 5px;
+  border: 1px solid #EEE;
+  width: 100%;
+  height: 60px;
+  float: left;
+  padding: 10px 15px;
+  opacity: 0.8;
+  color:blue;
+  text-align:left;
+}
+
+.bouton-update{
+  background-color: #008CBA;
+  color: #FFF;
+  text-align: center;
+  width: 99%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#008CBA;
+  font-size:16px;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+  padding: 0px;
+}
+
+label{font-weight:600; color:#0066cc; font-size:15px;}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% if note == 'exist' %}<script>alert("This dynamical question already exists");</script>{% endif %}
+
+<img src="/static/dating/images/appicon.png" style="position:relative; width:60px; height:60px; border-radius:50%; border:2px solid yellow; z-index:100; left:3%; top:50px;">
+
+<div id="title" style="font-size:25px; font-weight:800; color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center;
+	position:fixed; left:50%; float:middle; transform:translate(-50%, -50%); width:350px; z-index:100; top:92px; display:none;">Edit membership plans</div>
+
+<div id="edit">
+    <div style="font-size:25px; font-weight:800; margin-bottom:30px;
+            color: #F7D479; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">Membership plans</div>
+    <div class="contentform">
+        <form action="/updatemembership" method="post" enctype="multipart/form-data" style="width:100%;">
+            {% csrf_token %}
+            <div class="form-group">
+                <center>
+                    <div style="width:100%;">
+                        <div style="width:30%; float:left; font-size:18px; color:black; font-weight:600;">Months</div>
+                        <div style="width:30%; float:left; margin-left:1%; font-size:18px; color:black; font-weight:600;">Dates</div>
+                        <div style="width:37%; float:left; margin-left:1%; font-size:18px; color:black; font-weight:600;">Price($)</div>
+                    </div>
+                </center>
+            </div><br>
+            <div class="form-group">
+                <p>Default <span>*</span></p>
+                <center>
+                    <p style="color:#cc66ff;">BRONZE - Free</p>
+                    <div style="width:100%;">
+                        <input type="number" id="months" name="months" placeholder="- - -" value="{{plan.months}}" style="width:30%; float:left;" readonly>
+                        <input type="number" required id="dates" name="dates" placeholder="Dates" value="{{plan.dates}}" style="width:30%; float:left; margin-left:1%;">
+                        <input type="number" step="any" id="price" name="price" placeholder="- - -" value="{{plan.price}}" style="width:37%; float:left; margin-left:1%;" readonly>
+                    </div>
+                </center>
+            </div><br>
+            <div class="form-group">
+                <p>Premium <span>*</span></p>
+                <center>
+                    <p style="color:#cc66ff;">Silver</p>
+                    <div style="width:100%;">
+                        <input type="number" required id="months1" name="months1" placeholder="Months" value="{{plan.months1}}" style="width:30%; float:left;">
+                        <input type="number" required id="dates1" name="dates1" placeholder="Dates" value="{{plan.dates1}}" style="width:30%; float:left; margin-left:1%;">
+                        <input type="number" step="any" required id="price1" name="price1" placeholder="Price($)" value="{{plan.price1}}" style="width:37%; float:left; margin-left:1%;">
+                    </div>
+                </center>
+                <center style="margin-top:15px;">
+                    <p style="color:#cc66ff;">Gold</p>
+                    <div style="width:100%;">
+                        <input type="number" required id="months2" name="months2" placeholder="Months" value="{{plan.months2}}" style="width:30%; float:left;">
+                        <input type="number" required id="dates2" name="dates2" placeholder="Dates" value="{{plan.dates2}}" style="width:30%; float:left; margin-left:1%;">
+                        <input type="number" step="any" required id="price2" name="price2" placeholder="Price($)" value="{{plan.price2}}" style="width:37%; float:left; margin-left:1%;">
+                    </div>
+                </center>
+                <center style="margin-top:15px;">
+                    <p style="color:#cc66ff;">Platinum</p>
+                    <div style="width:100%;">
+                        <input type="number" required id="months3" name="months3" placeholder="Months" value="{{plan.months3}}" style="width:30%; float:left;">
+                        <input type="number" required id="dates3" name="dates3" placeholder="Dates" value="{{plan.dates3}}" style="width:30%; float:left; margin-left:1%;">
+                        <input type="number" step="any" required id="price3" name="price3" placeholder="Price($)" value="{{plan.price3}}" style="width:37%; float:left; margin-left:1%;">
+                    </div>
+                </center>
+            </div>
+            <br>
+            <button type="submit" class="bouton-update">Update</button>
+        </form>
+    </div>
+</div>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("title").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("title").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+function getCookie(name) {
+    console.log('getCookie');
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                    }
+            }
+    }
+    console.log('cookie:' + cookieValue);
+    return cookieValue;
+}
+
+function post(path, params, method) {
+   method = method || "post"; // Set method to post by default if not specified.
+
+   // The rest of this code assumes you are not using a library.
+   // It can be made less wordy if you use one.
+   var form = document.createElement("form");
+   form.setAttribute("method", method);
+   form.setAttribute("action", path);
+
+   for(var key in params) {
+      if(params.hasOwnProperty(key)) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", key);
+          hiddenField.setAttribute("value", params[key]);
+
+          form.appendChild(hiddenField);
+      }
+   }
+
+   var hiddenField1 = document.createElement("input");
+   hiddenField1.setAttribute("type", "hidden");
+   hiddenField1.setAttribute("name", 'csrfmiddlewaretoken');
+   hiddenField1.setAttribute("value", getCookie('csrftoken'));
+   form.appendChild(hiddenField1);
+
+   document.body.appendChild(form);
+   form.submit();
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
